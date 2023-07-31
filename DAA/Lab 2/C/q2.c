@@ -1,21 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void decToBinary(int n, FILE *fptr) {
-    if (n > 1)
-        decToBinary(n / 2, fptr);
-    fprintf(fptr, "%d", n % 2);
+int gcd(int a, int b) {
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 4) {
-        printf("Usage: %s n input_file output_file\n", argv[0]);
+    if (argc != 3) {
+        printf("Usage: %s input_file output_file\n", argv[0]);
         exit(1);
     }
 
-    int n = atoi(argv[1]);
-    char *input_file = argv[2];
-    char *output_file = argv[3];
+    char *input_file = argv[1];
+    char *output_file = argv[2];
 
     FILE *fin = fopen(input_file, "r");
     if (fin == NULL) {
@@ -29,12 +28,9 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    int num;
-    while (n-- && fscanf(fin, "%d", &num) == 1) {
-        fprintf(fout, "The binary equivalent of %d is ", num);
-        decToBinary(num, fout);
-        fprintf(fout, "\n");
-    }
+    int a, b;
+    while (fscanf(fin, "%d%d", &a, &b) == 2)
+        fprintf(fout, "The GCD of %d and %d is %d\n", a, b, gcd(a, b));
 
     fclose(fin);
     fclose(fout);
